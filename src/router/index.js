@@ -9,7 +9,7 @@ import AddApi from '@/components/AddApi';
 import ReadMe from '@/components/ReadMe';
 import Download from '@/components/Download';
 import ApiConfig from '@/components/ApiConfig';
-// import store from '../store';
+import store from '../store';
 
 
 Vue.use(Router);
@@ -70,16 +70,16 @@ const router = new Router(routerConfig);
 router.beforeEach((to, from, next) => {
   iView.LoadingBar.start();
   next();
-  // if (store.getters.projectId.length) {
-  //   // eslint-disable-next-line
-  //   if (to.path = '/') {
-  //     next('/viewapi');
-  //   } else {
-  //     next();
-  //   }
-  // } else {
-  //   next('/');
-  // }
+  if (store.getters.projectId.length) {
+    // eslint-disable-next-line
+    if (to.path = '/') {
+      next('/viewapi');
+    } else {
+      next();
+    }
+  } else {
+    next('/');
+  }
 });
 
 router.afterEach(() => {
