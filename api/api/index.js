@@ -2,7 +2,6 @@
 const http = require('../http');
 const urls = require('../config/urls');
 const methods = require('../config/methods');
-const { verifyFail } = require('../config/notify');
 const { validParams, merge } = require('../utils');
 
 let fnList = merge(methods, urls);
@@ -27,7 +26,6 @@ function fnFactory(obj) {
         return http[obj.method](obj.url, data);
       }
     }
-    verifyFail();
   };
 }
 

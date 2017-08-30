@@ -1,22 +1,26 @@
 import axios from 'axios';
 
-const { requestFail } = require('../config/notify');
+const { verifyFail, requestFail } = require('../config/notify');
 const HTTP_ERROR = require('./httpError');
 const CUSTOM_ERROR = require('./customError');
 
 
 // const CancelToken = axios.CancelToken;
+// const source = CancelToken.source();
 
 function validateStatus(status) {
-  return status >= 200 && status < 300; // default
+  return status >= 200 && status < 300;
 }
 
 const http = axios.create({
   validateStatus,
   timeout: 2500,
-  withCredentials: false,
-  // cancelToken: CancelToken.source,
+  withCredentials: true,
+  // cancelToken: source.token,
 });
+
+http.verifyFail = verifyFail;
+http.requestFail = requestFail;
 
 // http.prototype.cancel = CancelToken.cancel;
 
@@ -26,9 +30,9 @@ http.interceptors.request.use(config => config, (error) => {
   } else {
     requestFail({ code: error.status, message: HTTP_ERROR[error.status] });
   }
-  // return Promise.reject(error);
 });
 
+// eslint-disable-next-line
 http.interceptors.response.use((response) => {
   if (validateStatus(response.data.statusCode)) {
     response.data = response.data.data;
@@ -38,7 +42,6 @@ http.interceptors.response.use((response) => {
     code: response.data.statusCode,
     message: CUSTOM_ERROR[response.data.statusCode],
   });
-  // return Promise.reject(error);
 }, (error) => {
   if (error.response) {
     requestFail({
@@ -48,7 +51,6 @@ http.interceptors.response.use((response) => {
   } else {
     requestFail({ code: error.status, message: CUSTOM_ERROR[error.status] });
   }
-  // return Promise.reject(error);
 });
 
 module.exports = http;

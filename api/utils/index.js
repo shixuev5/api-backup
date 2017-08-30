@@ -10,7 +10,7 @@ const validParams = function (schema, args) {
     for (let i of argsFileds) {
       if (schemaFileds.indexOf(i) === -1) {
         isValid = false;
-        if (new RegExp(i, 'i').test(schemaFileds.join(''))) {
+        if (new RegExp(`${i}/`, 'i').test(schemaFileds.join('/'))) {
           console.error(`${i} 大小写不匹配！`);
         } else {
           console.error(`${i} 未被使用！`);

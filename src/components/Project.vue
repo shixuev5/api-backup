@@ -1,8 +1,7 @@
 <template>
   <div>
     <div class="project">
-      <Card class="card" :class="cardClass(item)" @click.native="clickCard(item)" 
-      v-for="(item, index) in projects" :key="item.id" dis-hover>
+      <Card class="card" :class="cardClass(item)" @click.native="clickCard(item)" v-for="(item, index) in projects" :key="item.id" dis-hover>
         <p slot="title">
           <Icon type="checkmark-circled" size="16"></Icon>
           {{item.name}}
@@ -44,12 +43,16 @@ export default {
   },
   methods: {
     complete() {
-      this.$store.dispatch('fetchBaseUrl');
-      this.$store.dispatch('fetchModuleUrl');
-      this.$store.dispatch('fetchServerUrl');
-      this.$store.dispatch('fetchModule');
-      this.$store.dispatch('fetchMethod');
-      this.$router.push('viewapi');
+      if (this.projectId.length === 0) {
+        this.$Message.error('请选择至少一个项目!');
+      } else {
+        this.$store.dispatch('fetchBaseUrl');
+        this.$store.dispatch('fetchModuleUrl');
+        this.$store.dispatch('fetchServerUrl');
+        this.$store.dispatch('fetchModule');
+        this.$store.dispatch('fetchMethod');
+        this.$router.push('viewapi');
+      }
     },
     clickCard(item) {
       const index = this.projectId.indexOf(item.id);
